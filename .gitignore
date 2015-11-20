@@ -1,0 +1,7 @@
+auto/
+conf/
+contrib/
+docs/
+misc/
+.DS_Store
+.hgtags
