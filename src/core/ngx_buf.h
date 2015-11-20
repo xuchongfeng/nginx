@@ -29,12 +29,15 @@ struct ngx_buf_s {
     /* 表示用于内存时的起始和结束位置 */
     u_char          *start;         /* start of buffer */
     u_char          *end;           /* end of buffer */
+    /* 表示当前缓冲区的类型， 由那个ngx_modules_t使用，就指向该变量的地址 */
     ngx_buf_tag_t    tag;
+    /* 引用的文件 */
     ngx_file_t      *file;
     ngx_buf_t       *shadow;
 
 
     /* the buf's content could be changed */
+    /* 临时内存标志位，为1时，表示数据在内存中且可以修改 */
     unsigned         temporary:1;
 
     /*
@@ -46,14 +49,21 @@ struct ngx_buf_s {
     /* the buf's content is mmap()ed and must not be changed */
     unsigned         mmap:1;
 
+    /* 为1时，表示可回收 */
     unsigned         recycled:1;
+    /* 为1时，表示缓冲区处理的是文件而不是内存 */
     unsigned         in_file:1;
+    /* 为1时，表示需要执行flush操作 */
     unsigned         flush:1;
+    /* 表示是否使用同步方式操作缓冲区 */
     unsigned         sync:1;
+    /* 标志位，表示是否是最后一块缓冲区 */
     unsigned         last_buf:1;
+    /* 标志位，表示是否是ngx_chain_t的最后一块缓冲区 */
     unsigned         last_in_chain:1;
 
     unsigned         last_shadow:1;
+    /* 表示当前缓冲区是否属于临时文件 */
     unsigned         temp_file:1;
 
     /* STUB */ int   num;
