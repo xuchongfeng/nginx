@@ -16,17 +16,21 @@
 typedef struct ngx_listening_s  ngx_listening_t;
 
 struct ngx_listening_s {
+    // socket 套接字句柄
     ngx_socket_t        fd;
-
+    // 监听sockaddr地址
     struct sockaddr    *sockaddr;
     socklen_t           socklen;    /* size of sockaddr */
     size_t              addr_text_max_len;
+    // 以字符串存储IP地址
     ngx_str_t           addr_text;
-
+    // 套接字地址
     int                 type;
-
+    // 表示TCP实现监听的backlog队列，表示已经完成TCP三次握手但是没有任何进程处理的连接的最大个数
     int                 backlog;
+    // 内核对于这个套接字的接收缓冲区大小
     int                 rcvbuf;
+    // 内核对于这个套接字的发送缓冲区大小
     int                 sndbuf;
 #if (NGX_HAVE_KEEPALIVE_TUNABLE)
     int                 keepidle;
@@ -35,10 +39,12 @@ struct ngx_listening_s {
 #endif
 
     /* handler of accepted connection */
+    // 表示在这个监听端口上成功建立新的TCP连接后，就会回调的Handler方法，很对事件消费模块会自定义这个handler方法
     ngx_connection_handler_pt   handler;
 
     void               *servers;  /* array of ngx_http_in_addr_t, for example */
 
+    // 可用日志对象
     ngx_log_t           log;
     ngx_log_t          *logp;
 
@@ -46,6 +52,8 @@ struct ngx_listening_s {
     /* should be here because of the AcceptEx() preread */
     size_t              post_accept_buffer_size;
     /* should be here because of the deferred accept */
+    /*TCP_DEFER_ACCEPT选项表示完成TCP三次握手的连接，只有在post_accept_timeout时间之内发送数据，才
+    向对该套接字感兴趣的进程发送事件通知，如果在post_accept_timeout时间之内没有发送数据，则直接关闭该连接。*/
     ngx_msec_t          post_accept_timeout;
 
     ngx_listening_t    *previous;

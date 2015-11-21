@@ -36,10 +36,14 @@ struct ngx_shm_zone_s {
 
 
 struct ngx_cycle_s {
+    // 保存着所有模块的存储配置项的结构体指针
     void                  ****conf_ctx;
     ngx_pool_t               *pool;
 
+    /*在调用ngx_cycle_init之前，暂时使用log对象并将信息输出到屏幕，调用之后会根据nginx.conf配置项，对log进行重新赋值*/
     ngx_log_t                *log;
+    /*在根据nginx.conf配置项配置日志时，log仍表示输出到屏幕，设置的log会被暂时保存在new_log变量中，
+    完成初始化之后，log会被赋值为new_log*/
     ngx_log_t                 new_log;
 
     ngx_uint_t                log_use_stderr;  /* unsigned  log_use_stderr:1; */
